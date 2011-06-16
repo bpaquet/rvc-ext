@@ -90,7 +90,7 @@ def cd path
     raise "Error : no sub element"
   end
   unless $context.sub_element.index(path)
-    raise "No sub element named #{path}"
+    raise "Error : No sub element named #{path}"
   end
   $context.send(:cd, path)
 end
@@ -135,7 +135,7 @@ while line = Readline.readline("VMWareCli #{$context.path}> ", true)
       begin
         cd path
       rescue Exception => e
-        puts "Unable to go to #{path}"
+        puts "Error : Unable to go to #{path}"
       end
     end
     next
