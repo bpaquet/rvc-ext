@@ -1,0 +1,4 @@
+:my_hostname:
+  :login: root
+  :password: my_password
+  :host: toto.toto.com

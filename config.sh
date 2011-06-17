@@ -1,0 +1,1 @@
+export RVC_MODULE_PATH=`pwd`/modules
