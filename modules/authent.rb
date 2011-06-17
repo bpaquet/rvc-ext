@@ -1,6 +1,6 @@
 require 'yaml'
 
-config_file = "rvc.authent.yml"
+config_file = ENV['RVC_AUTHENT_YML'] || 'rvc.authent.yml'
 
 if File.exist? config_file
   config = YAML.load(File.read(config_file))
