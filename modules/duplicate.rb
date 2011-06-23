@@ -18,20 +18,31 @@ def vm src, dest, opts
   opts[:memory] = src.summary.config.memorySizeMB
   opts[:guest_id] = src.config.guestId
   opts[:network] = src.config.hardware.device.grep(VIM::VirtualEthernetCard)[0].backing.network.name if local
-  vm = RVC::MODULES['vm'].create dest, opts
+  vm = RVC::MODULES['vm'].create(dest, opts)
+  err "Unable to create vm" unless vm
   vm.config.hardware.device.grep(VIM::VirtualDisk).each do |disk|
     label = disk.deviceInfo.label
-    RVC::MODULES['vm'].remove_disk vm, label
+    module_call :vm, :remove_disk, vm, label
   end
+  module_call :vm, :reconfigure_all_net_device, vm, {:type => 'vmxnet3'}
   puts ">>> Clone created : #{vm}"
   puts ">>> Duplicating disk"
   src.config.hardware.device.grep(VIM::VirtualDisk).each do |disk|
-    RVC::MODULES['vm'].add_scsi_disk vm, {:disksize => disk.capacityInKB, :diskthin => disk.backing.thinProvisioned}
+    type = case disk.controllerKey
+    when 1000:
+      "lsiLogic"
+    when 200:
+      "ide"
+    else
+      err "Unknown controller type #{disk.controllerKey}"
+    end
+    puts "Creating disk #{type}, size #{disk.capacityInKB}"
+    module_call :vm, :add_disk, vm, {:type => type, :disksize => disk.capacityInKB, :diskthin => disk.backing.thinProvisioned}
     new_disk = vm.config.hardware.device.grep(VIM::VirtualDisk).last
-    progress [vm._connection.serviceContent.virtualDiskManager.DeleteVirtualDisk_Task(
+    progress_and_raise_if_error [vm._connection.serviceContent.virtualDiskManager.DeleteVirtualDisk_Task(
       :name => new_disk.backing.fileName
     )]
-    progress [vm._connection.serviceContent.virtualDiskManager.CopyVirtualDisk_Task(
+    progress_and_raise_if_error [vm._connection.serviceContent.virtualDiskManager.CopyVirtualDisk_Task(
       :sourceName => disk.backing.fileName,
       :destName => new_disk.backing.fileName,
       :spec => VIM.FileBackedVirtualDiskSpec(
