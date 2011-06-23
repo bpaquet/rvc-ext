@@ -12,6 +12,8 @@ def vm src, dest, opts
   err "Vm already exist #{name}" if vmFolder.children[name]
   puts ">>> Duplicating vm #{src.name} to #{name}"
   local = src._connection == vmFolder._connection
+  opts[:datastore] ||= get_default_datastore vmFolder
+  opts[:pool] ||= get_default_pool vmFolder
   opts[:disksize] = 4000000
   opts[:diskthin] = true
   opts[:cpucount] = src.summary.config.numCpu
@@ -53,4 +55,12 @@ def vm src, dest, opts
     )]
     puts ">>> Clone #{vm} ok."
   end
+end
+
+def get_default_datastore object
+  object._connection.root.children.first[1].children["datastore"].children.values[0]
+end
+
+def get_default_pool object
+  object._connection.root.children.first[1].children["host"].children.values[0].children["resourcePool"]
 end
