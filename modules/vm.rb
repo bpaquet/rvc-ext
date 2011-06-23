@@ -12,3 +12,13 @@ def reconfigure_all_net_device vm, opts
     add_net_device vm, opts.merge(:network => eth.backing.network.name)
   end
 end
+
+opts :move_into_resource_pool do
+  summary "Move vms into resource pool"
+  arg :vm, nil, :lookup => VIM::VirtualMachine
+  arg :pool, "Resource pool", :short => 'p', :type => :string, :lookup => VIM::ResourcePool
+end
+
+def move_into_resource_pool vm, pool
+  pool.MoveIntoResourcePool(:list => [vm])
+end
