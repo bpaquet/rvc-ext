@@ -9,7 +9,7 @@ if File.exist? config_file
     host_config = config[host.to_sym]
     if host_config
       cmd = "#{host_config[:login] || 'root'}:#{host_config[:password]}@#{host_config[:host] || host}"
-      puts "Using authent from config for #{host}"
+      # puts "Using authent from config for #{host}"
       ARGV[k] = cmd
     end
   end    
