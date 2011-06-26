@@ -22,3 +22,14 @@ end
 def move_into_resource_pool vm, pool
   pool.MoveIntoResourcePool(:list => [vm])
 end
+
+opts :assert_state do
+  summary "Assert virtual machine state"
+  arg :vm, nil, :lookup => VIM::VirtualMachine
+  arg :state, "Expected vm status"
+end
+
+def assert_state vm, state
+  current_state = vm.summary.runtime.powerState
+  raise "Wrong state #{current_state} instead of expected #{state}" if current_state != state
+end
