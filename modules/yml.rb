@@ -1,12 +1,12 @@
 require 'yaml'
 
-opts :compute_resource_summray do
+opts :compute_resource_summary do
   summary "Give a compute resource summary in yml mode"
   arg :yml_file, "Target yml file"
   arg :obj, "Compute resource", :required => false, :default => '.', :lookup => VIM::ComputeResource
 end
 
-def compute_resource_summray yml_file, object
+def compute_resource_summary yml_file, object
   data = {
     :summary => _to_yml(object.summary),
     :stats => object.stats,
