@@ -14,6 +14,20 @@ def compute_resource_summray yml_file, object
   _dump_yml data, yml_file
 end
 
+opts :ls_vms_simple do
+  summary "List virtuals machines, simple info in yml mode"
+  arg :yml_file, "Target yml file"
+  arg :obj, "Directory to list", :required => false, :default => '.', :lookup => VIM::Folder
+end
+
+def ls_vms_simple yml_file, object
+  data = []
+  object.children.each do |name, vm|
+    data << {:name => name, :powerState => vm.runtime.powerState}
+  end
+  _dump_yml data, yml_file
+end
+
 opts :ls_vms do
   summary "List virtuals machines in yml mode"
   arg :yml_file, "Target yml file"
