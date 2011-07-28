@@ -30,6 +30,17 @@ opts :ls_vms do
   arg :obj, "Directory to list", :required => false, :default => '.', :lookup => Object
 end
 
+opts :vm do
+  summary "Give info on a specific vm"
+  arg :yml_file, "Target yml file"
+  arg :obj, "VM to list", :lookup => VIM::VirtualMachine
+end
+
+def vm yml_file, vm
+ yml = {:summay => _to_yml(vm.summary), :config => _to_yml(vm.config)}
+ _dump_yml yml, yml_file
+end
+
 def ls_vms yml_file, object
   yml = _search_vms object
   _dump_yml yml, yml_file
