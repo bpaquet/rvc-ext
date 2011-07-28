@@ -80,7 +80,8 @@ def _process_object o
   elsif o.is_a? Array
     o.map{|oo| _process_object oo}
   elsif o.respond_to? :props
-    _to_yml o
+    intern = _to_yml o
+    o.is_a?(RbVmomi::VIM::VirtualDevice) ? intern.merge({:class => o.class.name, :is_network => o.is_a?(RbVmomi::VIM::VirtualEthernetCard)}) : intern
   else
     # puts "Unknown object type #{o.class}"
     nil
