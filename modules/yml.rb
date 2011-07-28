@@ -37,7 +37,7 @@ opts :vm do
 end
 
 def vm yml_file, vm
- yml = {:summay => _to_yml(vm.summary), :config => _to_yml(vm.config)}
+ yml = {:summary => _to_yml(vm.summary), :config => _to_yml(vm.config)}
  _dump_yml yml, yml_file
 end
 
