@@ -31,9 +31,9 @@ def vm src, dest, opts
   puts ">>> Duplicating disk"
   src.config.hardware.device.grep(VIM::VirtualDisk).each do |disk|
     type = case disk.controllerKey
-    when 1000:
+    when 1000
       "lsiLogic"
-    when 200:
+    when 200
       "ide"
     else
       err "Unknown controller type #{disk.controllerKey}"
