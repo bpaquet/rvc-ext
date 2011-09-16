@@ -1,6 +1,6 @@
 
 opts :shutdown do
-  summary "Shutdown a host"
+  summary "Shutdown an esx host"
   arg :host, nil, :lookup => VIM::HostSystem, :multi => true
   opt :force, "Shutdown even if in maintenance mode", :default => false
 end
