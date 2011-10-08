@@ -12,6 +12,6 @@ def extend disk, new_capcity_kb
   disk.datastore._connection.serviceContent.virtualDiskManager.ExtendVirtualDisk_Task(
     :name => name,
     :newCapacityKb => new_capcity_kb,
-    :eagerZero => false,
+    :eagerZero => false
   ).wait_for_completion
 end
