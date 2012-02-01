@@ -20,7 +20,9 @@ def vm src, dest, opts
   opts[:memory] = src.summary.config.memorySizeMB
   opts[:guestid] = src.config.guestId
   opts[:network] = src.config.hardware.device.grep(VIM::VirtualEthernetCard)[0].backing.network.name if local
-  opts[:controller] = src.config.hardware.device.grep(VIM::VirtualSCSIController)[0].class.to_s
+  if src.config.hardware.device.grep(VIM::VirtualSCSIController).size > 0
+    opts[:controller] = src.config.hardware.device.grep(VIM::VirtualSCSIController)[0].class.to_s
+  end
   vm = RVC::MODULES['vm'].create(dest, opts)
   err "Unable to create vm" unless vm
   vm.config.hardware.device.grep(VIM::VirtualDisk).each do |disk|
